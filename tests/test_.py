@@ -1,13 +1,8 @@
 from fastapi.testclient import TestClient
-from homework.main import app
-import pytest
+
+from src.homework.main import app
 
 client = TestClient(app)
-
-
-@pytest.fixture
-def key_value_json():
-    return {'key': 'test_key', 'value': 'test_value'}
 
 
 def test_get_hello():
@@ -34,7 +29,11 @@ def test_set_key_value(key_value_json):
 
 
 def test_set_key_value_with_extra_fields():
-    key_value_json = {'key': 'test_key', 'value': 'test_value', 'extra_field': 'extra_data'}
+    key_value_json = {
+        'key': 'test_key',
+        'value': 'test_value',
+        'extra_field': 'extra_data',
+    }
     response = client.post('/set', json=key_value_json)
     assert response.status_code == 200
 
@@ -45,8 +44,11 @@ def test_set_key_value_invalid_data():
 
 
 def test_set_key_value_invalid_content_type(key_value_json):
-    response = client.post('/set', json=key_value_json,
-                           headers={'Content-Type': 'text/plain; charset=utf-8'})
+    response = client.post(
+        '/set',
+        json=key_value_json,
+        headers={'Content-Type': 'text/plain; charset=utf-8'},
+    )
     assert response.status_code == 415
 
 
@@ -78,11 +80,17 @@ def test_divide_numbers_invalid_data():
 def test_catch_all():
     response_get = client.get('/some_invalid_path')
     assert response_get.status_code == 405
-    response_post = client.post('/some_invalid_path', headers={'Content-Type': 'application/json'})
+    response_post = client.post(
+        '/some_invalid_path', headers={'Content-Type': 'application/json'}
+    )
     assert response_post.status_code == 405
-    response_put = client.put('/some_invalid_path', headers={'Content-Type': 'application/json'})
+    response_put = client.put(
+        '/some_invalid_path', headers={'Content-Type': 'application/json'}
+    )
     assert response_put.status_code == 405
-    response_patch = client.patch('/some_invalid_path', headers={'Content-Type': 'application/json'})
+    response_patch = client.patch(
+        '/some_invalid_path', headers={'Content-Type': 'application/json'}
+    )
     assert response_patch.status_code == 405
     response_delete = client.delete('/some_invalid_path')
     assert response_delete.status_code == 405

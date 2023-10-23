@@ -1,19 +1,22 @@
 from typing import Dict
 
 from fastapi import FastAPI, Request
-from starlette.responses import PlainTextResponse, JSONResponse
+from starlette.responses import JSONResponse, PlainTextResponse
 
-from homework.exceptions import raise_specific_status_code_exception
-from homework.schemas import KeyValue, DivisionInput
+from src.homework.exceptions import raise_specific_status_code_exception
+from src.homework.schemas import DivisionInput, KeyValue
 
 app = FastAPI()
 
-memory_storage = {}
+memory_storage: dict = {}
 
 
 @app.middleware('http')
 async def check_post_request_content_type(request: Request, call_next):
-    if request.method == 'POST' and request.headers.get('Content-Type') != 'application/json':
+    if (
+        request.method == 'POST'
+        and request.headers.get('Content-Type') != 'application/json'
+    ):
         return JSONResponse(content={'detail': ''}, status_code=415)
     response = await call_next(request)
     return response
@@ -28,8 +31,8 @@ def get_hello():
 def get_key_value(key: str):
     if key in memory_storage:
         return {"key": key, "value": memory_storage[key]}
-    else:
-        raise_specific_status_code_exception(status_code=404)
+    raise_specific_status_code_exception(status_code=404)
+    return None
 
 
 @app.post("/set")
@@ -48,12 +51,12 @@ async def divide_numbers(division_input: DivisionInput):
 
     try:
         result = dividend / divider
-    except Exception:
+    except ZeroDivisionError:
         raise_specific_status_code_exception(status_code=400)
     else:
         return str(result)
 
 
 @app.api_route("/{path_name:path}")
-async def catch_all(request: Request, path_name: str):
+async def catch_all():
     raise_specific_status_code_exception(status_code=405)

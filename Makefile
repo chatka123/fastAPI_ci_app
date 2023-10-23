@@ -21,3 +21,6 @@ lint:
 	flake8 $(CODE_FOLDERS) $(TEST_FOLDERS)
 	pylint $(CODE_FOLDERS) $(TEST_FOLDERS)
 	mypy $(CODE_FOLDERS) $(TEST_FOLDERS)
+
+security_checks:
+	bandit -r src
