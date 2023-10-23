@@ -1,4 +1,4 @@
-CODE_FOLDERS := server db config
+CODE_FOLDERS := src
 TEST_FOLDERS := tests
 
 .PHONY: update test lint security_checks
@@ -17,14 +17,10 @@ format:
 
 lint:
 	black --check .
+	isort $(CODE_FOLDERS) $(TEST_FOLDERS)
 	flake8 $(CODE_FOLDERS) $(TEST_FOLDERS)
 	pylint $(CODE_FOLDERS) $(TEST_FOLDERS)
 	mypy $(CODE_FOLDERS) $(TEST_FOLDERS)
 
-db_upgrade:
-	alembic upgrade head
-
-db_seed:
-	python -m seed
-
-db_start: db_upgrade db_seed
+security_checks:
+	bandit -r src
