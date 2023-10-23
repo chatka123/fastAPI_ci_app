@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.11"]
+        python-version: [ "3.11" ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -32,7 +32,11 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     needs: style_checks
+=======
+    needs: style_check
+>>>>>>> 5ca8ae10a11dc9d8353fde62b3dd417f39342dde
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,7 +47,11 @@ jobs:
   security_checks:
     name: Security checks
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     needs: style_checks
+=======
+    needs: style_check
+>>>>>>> 5ca8ae10a11dc9d8353fde62b3dd417f39342dde
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -61,4 +69,8 @@ jobs:
           make install
       - name: Style checking
         run: |
+<<<<<<< HEAD
           make security_checks
+=======
+          make security_checks
+>>>>>>> 5ca8ae10a11dc9d8353fde62b3dd417f39342dde
