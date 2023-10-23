@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.11"]
+        python-version: [ "3.11" ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -32,7 +32,7 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
-    needs: style_checks
+    needs: style_check
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
       - name: Run tests
         run: docker-compose run tests make test
   security_checks:
-    name: Security checks
+    name: Security check
     runs-on: ubuntu-latest
     needs: style_checks
     steps:
