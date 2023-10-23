@@ -2,26 +2,26 @@ name: Deploy application
 
 on:
   workflow_run:
-    workflows: [ "Static Checks" ]
+    workflows: [ "Continuous integration" ]
     types:
       - completed
+    branches:
+      - '*'
   push:
     branches:
       - '*'
 
 jobs:
   upload:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Login to Docker Hub
         run: echo ${{ secrets.GH_PSW }} | docker login -u ${{ secrets.GH_USR }} --password-stdin
-      - name: stub env
-        run: cp .env.example .env
-      - name: build image
+      - name: prepare image
         run: |
           docker-compose build server
+          docker tag fastapi_rest ${{ secrets.GH_USR }}/rest_api
       - name: Push the Docker image to Docker Hub
         run: |
-          docker push 
+          docker push ${{ secrets.GH_USR }}/rest_api
